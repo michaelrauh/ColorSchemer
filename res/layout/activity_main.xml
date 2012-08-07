@@ -3,15 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/ivPicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/display_s_the_users_image_selection"
-        android:src="@android:drawable/alert_dark_frame" />
-
     <Button
         android:id="@+id/bGetPicture"
         android:layout_width="fill_parent"
@@ -19,5 +10,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="@string/get_your_picture" />
+
+    <ImageView
+        android:id="@+id/ivComplement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="67dp"
+        android:src="@android:drawable/alert_dark_frame" />
+
+    <ImageView
+        android:id="@+id/ivPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/ivComplement"
+        android:layout_marginRight="55dp"
+        android:contentDescription="@string/display_s_the_users_image_selection"
+        android:src="@android:drawable/alert_dark_frame" />
 
 </RelativeLayout>
