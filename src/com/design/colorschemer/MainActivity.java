@@ -9,6 +9,9 @@ import java.io.FileNotFoundException;
 
 import javax.crypto.spec.IvParameterSpec;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -17,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -134,6 +138,57 @@ public class MainActivity extends Activity implements OnClickListener {
                 }
                 break;
             }
+            // I'll try to process from here. I think the bitmap is userPhoto. I
+            // can't get it to install on emulator,
+            // so this is somewhat of a shot in the dark. I'm trusting the
+            // interpreter a bit here.
+
+            // making an arraylist of each of the colors
+            ArrayList<triColor> colors = new ArrayList<triColor>();
+
+            // making an array of pixels, equal in size to the bitmap
+            int[] pixels = new int[userPhoto.getWidth() * userPhoto.getHeight()];
+
+            // load from bitmap to pixel array
+            userPhoto.getPixels(pixels, 0, userPhoto.getWidth(), 0, 0,
+                    userPhoto.getWidth(), userPhoto.getHeight());
+
+            int i = 0;
+
+            // for each pixel, parse into custom RGB class, add to the arraylist
+            while (i < pixels.length) {
+
+                triColor temp = new triColor();
+
+                temp.R = Color.red(pixels[i]);
+                temp.G = Color.green(pixels[i]);
+                temp.B = Color.blue(pixels[i]);
+
+                colors.add(temp);
+                i++;
+
+            }
+
+            // sort colors based upon custom order definition
+            Collections.sort(colors);
+
+            // Here is the median value, in the form of a triColor class object
+            triColor average = colors.get(colors.size() / 2);
+
+            // white is 255,255,255 so the complementary color is going to be
+            // 255-R,255-G,255-B
+
+            triColor complement = new triColor();
+
+            complement.R = 255 - average.R;
+            complement.G = 255 - average.G;
+            complement.B = average.B;
+
+            // I am thinking that the best way to output this color would be to
+            // make a new bitmap, and color
+            // each pixel according to these values. I'll stop here for now, but
+            // let me know if I should make that bitmap.
+
         }
 
     }
