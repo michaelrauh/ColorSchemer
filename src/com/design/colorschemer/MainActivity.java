@@ -5,21 +5,16 @@
 
 package com.design.colorschemer;
 
-import java.io.FileNotFoundException;
-
 //import javax.crypto.spec.IvParameterSpec;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
@@ -32,7 +27,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	// boolean isViewHidden = false;
 	private static final int PICK_FROM_CAMERA = 1;
-	private static final int PICK_FROM_FILE = 2;
+	
 	int startUp = 0;
 
 	Bitmap userPhoto;
@@ -93,16 +88,6 @@ public class MainActivity extends Activity implements OnClickListener {
 					Intent intent = new Intent(
 							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 					startActivityForResult(intent, PICK_FROM_CAMERA);
-				}
-
-				else { // pick from file
-					Intent intent = new Intent();
-
-					intent.setType("image/*");
-					intent.setAction(Intent.ACTION_GET_CONTENT);
-
-					startActivityForResult(Intent.createChooser(intent,
-							"Complete action using"), PICK_FROM_FILE);
 				}
 			}
 		});
@@ -189,41 +174,20 @@ public class MainActivity extends Activity implements OnClickListener {
 				complement.R = 255 - totalR / colors.size();
 				complement.G = 255 - totalG / colors.size();
 				complement.B = totalB / colors.size();
-				
-				int complementColor = Color.rgb(complement.R, complement.G, complement.B);
-				
+
+				int complementColor = Color.rgb(complement.R, complement.G,
+						complement.B);
+
 				int[] complementColorList = new int[10000];
-				for (int i = 0; i < 10000; i++){
+				for (int i = 0; i < 10000; i++) {
 					complementColorList[i] = complementColor;
 				}
-				
-				Bitmap complementColorPicture = Bitmap.createBitmap(complementColorList, 100, 100, userPhoto.getConfig());
-				
+
+				Bitmap complementColorPicture = Bitmap.createBitmap(
+						complementColorList, 100, 100, userPhoto.getConfig());
+
 				userComplement.setImageBitmap(complementColorPicture);
 
-				// I am thinking that the best way to output this color would be
-				// to
-				// make a new bitmap, and color
-				// each pixel according to these values. I'll stop here for now,
-				// but
-				// let me know if I should make that bitmap.
-
-				break;
-
-			case PICK_FROM_FILE:
-
-				// This gets the path data from the data given from the Uri and
-				// then grabs the image and sets it to the Bitmap variable
-				Uri targetUri = data.getData();
-
-				try {
-					userPhoto = BitmapFactory.decodeStream(getContentResolver()
-							.openInputStream(targetUri));
-					userPicture.setImageBitmap(userPhoto);
-
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
 				break;
 			}
 			// I'll try to process from here. I think the bitmap is userPhoto. I

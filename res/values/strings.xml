@@ -3,7 +3,7 @@
     <string name="app_name">colorSchemer</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Color Schemer</string>
     <string name="display_s_the_users_image_selection">Display\'s the users image selection</string>
     <string name="get_your_picture">Get Your Picture</string>
 
