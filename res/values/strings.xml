@@ -1,10 +1,13 @@
 <resources>
 
-    <string name="app_name">colorSchemer</string>
+    <string name="app_name">Color Schemer</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Color Schemer</string>
     <string name="display_s_the_users_image_selection">Display\'s the users image selection</string>
     <string name="get_your_picture">Get Your Picture</string>
+    <string name="original">Original</string>
+    <string name="shows_the_complement_color">Shows the complement color</string>
+    <string name="complement">Complement</string>
 
 </resources>

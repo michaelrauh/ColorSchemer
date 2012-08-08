@@ -18,6 +18,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="58dp"
+        android:contentDescription="@string/shows_the_complement_color"
         android:src="@android:drawable/alert_dark_frame" />
 
     <ImageView
@@ -36,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ivPicture"
         android:layout_below="@+id/ivPicture"
-        android:text="Original"
+        android:text="@string/original"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -47,7 +48,7 @@
         android:layout_alignBottom="@+id/textView1"
         android:layout_alignParentRight="true"
         android:layout_marginRight="42dp"
-        android:text="Complement"
+        android:text="@string/complement"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
