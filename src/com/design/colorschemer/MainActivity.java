@@ -5,248 +5,169 @@
 
 package com.design.colorschemer;
 
-//import javax.crypto.spec.IvParameterSpec;
-
 import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	// boolean isViewHidden = false;
-	private static final int PICK_FROM_CAMERA = 1;
-	
-	int startUp = 0;
+    private static final int PICK_FROM_CAMERA = 1;
 
-	Bitmap userPhoto;
-	Button getImage;
-	ImageView userPicture, userComplement;
+    int startUp = 0;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    Bitmap userPhoto;
+    Button getImage;
+    ImageView userPicture, userComplement;
 
-		// get the engines started
-		init();
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-	public void init() {
-		// Button that will start the camera
-		getImage = (Button) findViewById(R.id.bGetPicture);
-		getImage.setOnClickListener(this);
+        // get the engines started
+        init();
 
-		// Put a place for our picture
-		userPicture = (ImageView) findViewById(R.id.ivPicture);
-		userComplement = (ImageView) findViewById(R.id.ivComplement);
-	}
+        // Start the camera right when the activity starts
+        startCamera();
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
+    }
 
-	public void onClick(View view) {
-		// TODO Auto-generated method stub
+    public void init() {
 
-		// If we have more buttons they'll go here
-		switch (view.getId()) {
-		case R.id.bGetPicture:
-			selectPhotoOption();
-			break;
-		}
-	}
+        // Button that will start the camera
+        getImage = (Button) findViewById(R.id.bGetPicture);
+        getImage.setOnClickListener(this);
 
-	// This gives the user the option of selecting to use a camera or to grab it
-	// from there phone
-	public void selectPhotoOption() {
-		// TODO Auto-generated method stub
-		final String[] items = new String[] { "Take from camera",
-				"Select from gallery" };
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.select_dialog_item, items);
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Put a place for our picture
+        userPicture = (ImageView) findViewById(R.id.ivPicture);
+        userComplement = (ImageView) findViewById(R.id.ivComplement);
+    }
 
-		builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
 
-				// Get picture from camera
-				if (item == 0) {
-					Intent intent = new Intent(
-							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-					startActivityForResult(intent, PICK_FROM_CAMERA);
-				}
-			}
-		});
+    public void onClick(View view) {
+        // TODO Auto-generated method stub
 
-		final AlertDialog dialog = builder.create();
-		dialog.show();
-	}
+        // If we have more buttons they'll go here
+        switch (view.getId()) {
+        case R.id.bGetPicture:
+            startCamera();
+            break;
+        }
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+    // Starts the camera everytime you run this function
+    public void startCamera() {
+        // TODO Auto-generated method stub
 
-		if (resultCode == RESULT_OK) {
+        Intent intent = new Intent(
+                android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, PICK_FROM_CAMERA);
+    }
 
-			switch (requestCode) {
-			case PICK_FROM_CAMERA:
-				userPhoto = (Bitmap) data.getExtras().get("data");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-				// This displays the real picture
-				// userPicture.setImageBitmap(userPhoto);
+        if (resultCode == RESULT_OK) {
 
-				// making an arraylist of each of the colors
-				ArrayList<triColor> colors = new ArrayList<triColor>();
+            // I'll leave the case here incase we add more features
+            switch (requestCode) {
+            case PICK_FROM_CAMERA:
 
-				int[] pixels = new int[userPhoto.getWidth()
-						* userPhoto.getHeight()];
+                userPhoto = (Bitmap) data.getExtras().get("data");
 
-				// load from bitmap to pixel array
-				userPhoto.getPixels(pixels, 0, userPhoto.getWidth(), 0, 0,
-						userPhoto.getWidth(), userPhoto.getHeight());
+                // making an arraylist of each of the colors
+                ArrayList<triColor> colors = new ArrayList<triColor>();
 
-				// for each pixel, parse into custom RGB class, add to the
-				// arraylist
-				for (int i = 0; i < pixels.length; i++) {
-					triColor temp = new triColor();
+                int[] pixels = new int[userPhoto.getWidth()
+                        * userPhoto.getHeight()];
 
-					temp.R = Color.red(pixels[i]);
-					temp.G = Color.green(pixels[i]);
-					temp.B = Color.blue(pixels[i]);
+                // load from bitmap to pixel array
+                userPhoto.getPixels(pixels, 0, userPhoto.getWidth(), 0, 0,
+                        userPhoto.getWidth(), userPhoto.getHeight());
 
-					colors.add(temp);
-				}
+                // for each pixel, parse into custom RGB class, add to the
+                // arraylist
+                for (int i = 0; i < pixels.length; i++) {
+                    triColor temp = new triColor();
 
-				// sort colors based upon custom order definition
-				// Collections.sort(colors);
+                    temp.R = Color.red(pixels[i]);
+                    temp.G = Color.green(pixels[i]);
+                    temp.B = Color.blue(pixels[i]);
 
-				// Here is the median value, in the form of a triColor class
-				// object
-				// triColor average = colors.get(colors.size() / 2);
+                    colors.add(temp);
+                }
 
-				int totalR = 0;
-				int totalG = 0;
-				int totalB = 0;
+                // Here is the median value, in the form of a triColor class
+                // object
+                // triColor average = colors.get(colors.size() / 2);
 
-				for (int i = 0; i < colors.size(); i++) {
+                int totalR = 0;
+                int totalG = 0;
+                int totalB = 0;
 
-					totalR += colors.get(i).R;
-					totalG += colors.get(i).G;
-					totalB += colors.get(i).B;
+                for (int i = 0; i < colors.size(); i++) {
 
-				}
+                    totalR += colors.get(i).R;
+                    totalG += colors.get(i).G;
+                    totalB += colors.get(i).B;
 
-				int averageColor = Color.rgb(totalR / colors.size(), totalG
-						/ colors.size(), totalB / colors.size());
-				int[] averageColorList = new int[10000];
-				for (int i = 0; i < 10000; i++) {
-					averageColorList[i] = averageColor;
-				}
+                }
 
-				// Create the new bitmap of the average color
-				Bitmap averageColorPicture = Bitmap.createBitmap(
-						averageColorList, 100, 100, userPhoto.getConfig());
+                int averageColor = Color.rgb(totalR / colors.size(), totalG
+                        / colors.size(), totalB / colors.size());
+                int[] averageColorList = new int[10000];
+                for (int i = 0; i < 10000; i++) {
+                    averageColorList[i] = averageColor;
+                }
 
-				// Set it to the picture displayed
-				userPicture.setImageBitmap(averageColorPicture);
-				// averageColorPicture.recycle();
+                // Create the new bitmap of the average color
+                Bitmap averageColorPicture = Bitmap.createBitmap(
+                        averageColorList, 100, 100, userPhoto.getConfig());
 
-				// white is 255,255,255 so the complementary color is going to
-				// be
-				// 255-R,255-G,255-B
+                // Set it to the picture displayed
+                userPicture.setImageBitmap(averageColorPicture);
 
-				triColor complement = new triColor();
+                /*
+                 * white is 255,255,255 so the complementary color is going to
+                 * be 255-R,255-G,255-B
+                 */
 
-				complement.R = 255 - totalR / colors.size();
-				complement.G = 255 - totalG / colors.size();
-				complement.B = totalB / colors.size();
+                triColor complement = new triColor();
 
-				int complementColor = Color.rgb(complement.R, complement.G,
-						complement.B);
+                complement.R = 255 - totalR / colors.size();
+                complement.G = 255 - totalG / colors.size();
+                complement.B = totalB / colors.size();
 
-				int[] complementColorList = new int[10000];
-				for (int i = 0; i < 10000; i++) {
-					complementColorList[i] = complementColor;
-				}
+                int complementColor = Color.rgb(complement.R, complement.G,
+                        complement.B);
 
-				Bitmap complementColorPicture = Bitmap.createBitmap(
-						complementColorList, 100, 100, userPhoto.getConfig());
+                int[] complementColorList = new int[10000];
+                for (int i = 0; i < 10000; i++) {
+                    complementColorList[i] = complementColor;
+                }
 
-				userComplement.setImageBitmap(complementColorPicture);
+                Bitmap complementColorPicture = Bitmap.createBitmap(
+                        complementColorList, 100, 100, userPhoto.getConfig());
 
-				break;
-			}
-			// I'll try to process from here. I think the bitmap is userPhoto. I
-			// can't get it to install on emulator,
-			// so this is somewhat of a shot in the dark. I'm trusting the
-			// interpreter a bit here.
+                userComplement.setImageBitmap(complementColorPicture);
 
-			// making an arraylist of each of the colors
-			// ArrayList<triColor> colors = new ArrayList<triColor>();
-
-			// making an array of pixels, equal in size to the bitmap
-			// int[] pixels = new int[userPhoto.getWidth() *
-			// userPhoto.getHeight()];
-
-			// // load from bitmap to pixel array
-			// userPhoto.getPixels(pixels, 0, userPhoto.getWidth(), 0, 0,
-			// userPhoto.getWidth(), userPhoto.getHeight());
-			//
-			// int i = 0;
-			//
-			// // for each pixel, parse into custom RGB class, add to the
-			// arraylist
-			// while (i < pixels.length) {
-			//
-			// triColor temp = new triColor();
-			//
-			// temp.R = Color.red(pixels[i]);
-			// temp.G = Color.green(pixels[i]);
-			// temp.B = Color.blue(pixels[i]);
-			//
-			// colors.add(temp);
-			// i++;
-			//
-			// }
-			//
-			// // sort colors based upon custom order definition
-			// Collections.sort(colors);
-			//
-			// // Here is the median value, in the form of a triColor class
-			// object
-			// triColor average = colors.get(colors.size() / 2);
-			//
-			// // white is 255,255,255 so the complementary color is going to be
-			// // 255-R,255-G,255-B
-			//
-			// triColor complement = new triColor();
-			//
-			// complement.R = 255 - average.R;
-			// complement.G = 255 - average.G;
-			// complement.B = average.B;
-			//
-			// // I am thinking that the best way to output this color would be
-			// to
-			// // make a new bitmap, and color
-			// // each pixel according to these values. I'll stop here for now,
-			// but
-			// // let me know if I should make that bitmap.
-
-		}
-
-	}
+                break;
+            }
+        }
+    }
 }
